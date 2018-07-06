@@ -72,7 +72,6 @@ class Counter extends Component {
   }
 }
 
-
 const Problematic = () => {
   throw (new Error('버그가 나타났다!'));
   return (
