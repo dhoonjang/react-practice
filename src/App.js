@@ -16,7 +16,8 @@ class App extends Component {
         name: '홍길동',
         phone: '010-0000-0001'
       }
-    ]
+    ],
+    keyword: ''
   }
 
   handleRemove = (id) => {
@@ -33,16 +34,46 @@ class App extends Component {
     })
   }
 
-  render() {
+  handleChange = (e) => {
+    const { keyword } = this.state;
+    this.setState({
+      keyword: e.target.value
+    })
+  }
+
+  handleUpdate = (id, data) => {
     const { information } = this.state;
+    this.setState({
+      information: information.map(
+        info => id === info.id
+          ? { ...info, ...data } // 새 객체를 만들어서 기존의 값과 전달받은 data 을 덮어씀
+          : info // 기존의 값을 그대로 유지
+      )
+    })
+  }
+
+  render() {
+    const { information, keyword } = this.state;
+    const filterdList = information.filter(
+      info => info.name.indexOf(keyword) !== -1
+    );
+
     return (
       <div>
         <PhoneForm
           onCreate = {this.handleCreate}
         />
+        <p>
+          <input
+            placeholder="검색 할 이름을 입력하세요.."
+            onChange={this.handleChange}
+            value={keyword}
+          />
+        </p>
         <PhoneInfoList
-          data = {information}
+          data = {filterdList}
           onRemove = {this.handleRemove}
+          onUpdate = {this.handleUpdate}
         />
       </div>
     );
